@@ -1,6 +1,10 @@
 # BizOS: Getting Started
 
-BizOS is a file-based operating system for planning, research, and roadmapping initiatives. It lives as a folder on your computer, opens in Obsidian for browsing and editing, and pairs with Claude Code in the terminal so an AI agent can read, write, and update the same files you do.
+![Agent BizOS: remembers you and your biz, prevents shiny object syndrome, free open source markdown, Obsidian compatible.](assets/agent-bizos-banner.png)
+
+BizOS is a file-based operating system for planning, research, and roadmapping initiatives. It lives as a folder on your computer, opens in Obsidian for browsing and editing, and pairs with an AI agent in the terminal so the agent can read, write, and update the same files you do.
+
+The agent contract lives in `AGENTS.md`, the open standard that AI coding agents read to learn how to behave in a project. Because BizOS speaks that standard, it works with OpenCode, Codex, Claude Code, Cowork, and more. This guide installs OpenCode first because it is open source and free to start, but any AGENTS.md-compatible agent runs the same way.
 
 This guide gets a new user from zero to a working vault in about 20 minutes.
 
@@ -11,8 +15,8 @@ This guide gets a new user from zero to a working vault in about 20 minutes.
 Three pieces working together:
 
 1. **Obsidian** — a free desktop app that treats a folder of Markdown files as a "vault." This is how humans read and edit the system.
-2. **Claude Code** — Anthropic's terminal-based AI agent. This is how you talk to the system, ingest captures, and assign research.
-3. **Terminal** — the command-line app already on your computer. You'll use it to navigate to the vault folder and launch Claude Code from there.
+2. **An AGENTS.md agent** — a terminal-based AI agent that reads the `AGENTS.md` contract. This guide uses OpenCode, an open-source, provider-agnostic coding agent. This is how you talk to the system, ingest captures, and assign research. OpenCode, Codex, Claude Code, and Cowork all work here.
+3. **Terminal** — the command-line app already on your computer. You'll use it to navigate to the vault folder and launch the agent from there.
 
 The vault folder itself is just files on disk. No database, no cloud account, no lock-in. If you want to back it up, copy the folder. If you want to share it across machines, sync the folder.
 
@@ -68,35 +72,35 @@ The starter ships with these files already in place:
 
 ---
 
-## Step 3: Install Claude Code
+## Step 3: Install an agent (OpenCode)
 
-Claude Code is a command-line tool. You'll install it through your terminal.
+OpenCode is a command-line tool. You'll install it through your terminal.
 
 **Open the terminal:**
 - **Mac:** press `Cmd+Space`, type `Terminal`, press return.
 - **Windows:** open PowerShell from the Start menu.
 
-**Install Node.js first if you don't already have it.** Claude Code runs on Node. Check by typing:
+**Install OpenCode.** The install script is the fastest path on Mac and Linux:
 
 ```
-node --version
+curl -fsSL https://opencode.ai/install | bash
 ```
 
-If you see a version number (v18 or higher), you're set. If you see "command not found," install Node from [nodejs.org](https://nodejs.org) (LTS version), then close and reopen the terminal.
-
-**Install Claude Code:**
+If you already have Node.js (v18 or higher), you can install through npm instead:
 
 ```
-npm install -g @anthropic-ai/claude-code
+npm install -g opencode-ai
 ```
 
 When that finishes, verify it works:
 
 ```
-claude --version
+opencode --version
 ```
 
-You'll need an Anthropic API key or a Claude subscription on first run. Follow the prompts.
+On first run, OpenCode asks you to connect an AI provider. Run `opencode auth login` and follow the prompts to add a key for the provider you want to use.
+
+> **Prefer a different agent?** BizOS follows the `AGENTS.md` standard, so it also runs with Codex, Claude Code, Cowork, and other AGENTS.md-compatible agents. Install whichever one you already use, then pick up at Step 4. The rest of this guide uses OpenCode as the example, but the workflow is identical: launch the agent inside the vault folder and it reads `AGENTS.md` on startup.
 
 ---
 
@@ -110,7 +114,7 @@ That's the human view of the system.
 
 ---
 
-## Step 5: Open Claude Code in the vault folder
+## Step 5: Open the agent in the vault folder
 
 Back in the terminal, navigate to the vault folder. The command is `cd` (change directory) followed by the path:
 
@@ -130,19 +134,19 @@ Verify you're in the right place by listing the files:
 ls
 ```
 
-You should see `README.md`, `AGENTS.md`, `MISSION.md`, and the rest. If you do, launch Claude Code:
+You should see `README.md`, `AGENTS.md`, `MISSION.md`, and the rest. If you do, launch OpenCode:
 
 ```
-claude
+opencode
 ```
 
-Claude Code starts up inside the vault folder. From here on, every conversation it has, every file it reads, every edit it makes happens against this folder.
+The agent starts up inside the vault folder. From here on, every conversation it has, every file it reads, every edit it makes happens against this folder.
 
 ---
 
 ## Step 6: Your first session
 
-When Claude Code starts in a BizOS vault, the first thing it does is run the **Start-of-Session Ritual** defined in `AGENTS.md`. It reads the operator profile, the mission, the roadmap, scans open proposals, then restates the current focus and asks if you're pivoting.
+When the agent starts in a BizOS vault, the first thing it does is run the **Start-of-Session Ritual** defined in `AGENTS.md`. It reads the operator profile, the mission, the roadmap, scans open proposals, then restates the current focus and asks if you're pivoting.
 
 Try it. Type:
 
@@ -150,7 +154,7 @@ Try it. Type:
 what's on the roadmap?
 ```
 
-Claude reads `ROADMAP.md` and prints the current `Now / Active / Queue` back to you.
+The agent reads `ROADMAP.md` and prints the current `Now / Active / Queue` back to you.
 
 Or capture a new idea:
 
@@ -166,10 +170,10 @@ Claude writes a fragment into `00-INBOX/`. Later, when you say `triage inbox`, C
 
 Every working session, in roughly this order:
 
-1. **Open Claude Code in the vault.** It reads README, operator-profile, MISSION, ROADMAP, scans proposals, restates the Now.
-2. **Capture anything new.** Tell Claude what's on your mind. It writes to `00-INBOX/`.
+1. **Open the agent in the vault.** It reads README, operator-profile, MISSION, ROADMAP, scans proposals, restates the Now.
+2. **Capture anything new.** Tell the agent what's on your mind. It writes to `00-INBOX/`.
 3. **Work the current Now.** One thing at a time. The roadmap enforces single-focus discipline.
-4. **Triage the inbox** when it gets full (usually weekly). Claude clusters and proposes moves; you approve.
+4. **Triage the inbox** when it gets full (usually weekly). The agent clusters and proposes moves; you approve.
 5. **Open proposals for real decisions.** Anything with tradeoffs gets a file in `30-PROPOSALS/` with a `decide-by` date. Past-due proposals get parked by default.
 6. **Update ROADMAP.md** as work ships. Items move from Active to Recently Shipped.
 
@@ -181,7 +185,7 @@ The system is the loop. The files are just where the loop stores state.
 
 Three files you should edit first to make BizOS yours:
 
-1. **`operator-profile.md`** — who you are, what you do, who you serve, what you're optimizing for. This frames every conversation Claude has with the vault. Without it, you get generic agent behavior.
+1. **`operator-profile.md`** — who you are, what you do, who you serve, what you're optimizing for. This frames every conversation the agent has with the vault. Without it, you get generic agent behavior.
 2. **`MISSION.md`** — the narrative spine. Where you are today, where you're trying to get to, the principles guiding the work.
 3. **`ROADMAP.md`** — what's in motion right now. The starter ships with placeholder structure. Replace it with your real current focus.
 
@@ -191,9 +195,9 @@ Three files you should edit first to make BizOS yours:
 
 ## Workflow trigger phrases
 
-These phrases tell Claude to run a specific workflow. They're defined in `AGENTS.md`. Customize or extend them as your team finds patterns worth naming.
+These phrases tell the agent to run a specific workflow. They're defined in `AGENTS.md`. Customize or extend them as your team finds patterns worth naming.
 
-| Phrase | What Claude does |
+| Phrase | What the agent does |
 |---|---|
 | `triage inbox` | Reads everything new in `00-INBOX/`, proposes destinations, executes moves on approval. |
 | `what's on the roadmap` | Prints the current Now / Active / Queue from `ROADMAP.md`. |
@@ -217,10 +221,11 @@ Git is a reasonable choice if you want version history and collaboration through
 ## Where to get help
 
 - **Obsidian docs:** [help.obsidian.md](https://help.obsidian.md)
+- **OpenCode docs:** [opencode.ai/docs](https://opencode.ai/docs)
 - **Claude Code docs:** [docs.claude.com/claude-code](https://docs.claude.com/claude-code)
-- **The vault itself:** ask Claude. "How does the triage workflow work?" "What's in AGENTS.md?" Claude reads the files and answers from them.
+- **The vault itself:** ask your agent. "How does the triage workflow work?" "What's in AGENTS.md?" The agent reads the files and answers from them.
 
-If the system feels stale or you're not sure what to work on, ask Claude: *is the roadmap current?* Trust the files over recall.
+If the system feels stale or you're not sure what to work on, ask your agent: *is the roadmap current?* Trust the files over recall.
 
 ---
 
